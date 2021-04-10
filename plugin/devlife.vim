@@ -88,7 +88,7 @@ function! s:CreateOoo(pn)
     " call append(line("."), split(l:backlog, '\n'))
 endfunction
 
-function! s:GotoDailyNote()
+function! s:GotoDailyTask()
     let l:date = strftime("%Y-%m-%d")
     let l:month = strftime('%m.%B')
     let l:year = strftime('%Y')
@@ -111,7 +111,7 @@ function! s:FindLastEntry(today, base_path, max_retry)
     endif
 endfunction
 
-function! s:CreateDailyNote()
+function! s:CreateDailyTask()
     let l:date = strftime("%Y-%m-%d")
     let l:month = strftime('%m.%B')
     let l:year = strftime('%Y')
@@ -219,7 +219,6 @@ function! MarkdownGF()
     endif
 endfunction
 
-autocmd! Filetype markdown nnoremap <buffer> gf :call MarkdownGF()<CR>
 
 " Create non-existent directory on buffer create
 " https://stackoverflow.com/a/4294176/530767
@@ -236,3 +235,17 @@ augroup BWCCreateDir
     autocmd!
     autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
 augroup END
+
+autocmd! Filetype markdown nnoremap <buffer> gf :call MarkdownGF()<CR>
+
+"Mappings {{
+nnoremap edf :DlEnableDistractionFree<CR>
+nnoremap ddf :DlDisableDistractionFree<CR>
+nnoremap dltn :DlGotoDailyTask<CR>
+nnoremap dlt :DlCreateDailyTask<CR>
+nnoremap dlp :DlCreatePost
+nnoremap dll :DlCreateTil
+nnoremap dlo :DlCreateOoo
+nnoremap dlm :DlCreateMeetingNotes
+nnoremap dli :DlCreateInterviewNotes
+"}}
