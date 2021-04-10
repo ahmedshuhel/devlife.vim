@@ -1,11 +1,11 @@
 let s:project_root_dir = finddir('.git/..', expand('%:p:h').';')
-let s:plugin_dir = expand('<sfile>:h')
+let s:plugin_dir = expand('<sfile>:h:h')
 let s:template_dir = s:plugin_dir . "/tmpls"
 
 command! DlEnableDistractionFree call s:EnableDistractionFreeMode()
 command! DlDisableDistractionFree  call s:DisableDistractionFreeMode()
-command! DlGotoDailyNote call s:GotoDailyNote()
-command! DlCreateDailyNote call s:CreateDailyNote()
+command! DlGotoDailyTask call s:GotoDailyTask()
+command! DlCreateDailyTask call s:CreateDailyTask()
 command! -nargs=1 DlCreatePost call s:CreatePost(<q-args>)
 command! -nargs=1 DlCreateTil call s:CreateTil(<q-args>)
 command! -nargs=1 DlCreateOoo call s:CreateOoo(<q-args>)
@@ -94,7 +94,7 @@ function! s:GotoDailyTask()
     let l:date = strftime("%Y-%m-%d")
     let l:month = strftime('%m.%B')
     let l:year = strftime('%Y')
-    let l:fp = s:project_root_dir . "/dn/" . l:year . "/" . l:month . "/" . l:date . ".md"
+    let l:fp = s:project_root_dir . "/tasks/" . l:year . "/" . l:month . "/" . l:date . ".md"
     execute "e ". l:fp
 endfunction
 
@@ -119,7 +119,7 @@ function! s:CreateDailyTask()
     let l:year = strftime('%Y')
     let l:last_entry = s:FindLastEntry(localtime(), 'dn/', 15)
 
-    let l:folder_path = s:project_root_dir . "/dn/" . l:year . "/" . l:month . "/"
+    let l:folder_path = s:project_root_dir . "/tasks/" . l:year . "/" . l:month . "/"
     let l:file_path = l:folder_path . l:date . ".md"
 
     execute "edit " . l:last_entry
