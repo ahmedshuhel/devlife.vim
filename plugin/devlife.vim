@@ -175,31 +175,6 @@ function! s:NewFile(fp)
     :w
 endfunction
 
-" Distraction Free {{
-function! s:EnableDistractionFreeMode()
-  set signcolumn=no
-  :CocDisable
-  :ALEDisable
-  :silent exec "!tmux set -g status on"
-  :silent exec "!tmux resize-pane -Z"
-  color seoul256
-  :Goyo
-  :Limelight
-endfunction
-
-function! s:DisableDistractionFreeMode()
-  set signcolumn=yes
-  :CocEnable
-  :ALEEnable
-  :Limelight!
-  :Goyo!
-  color gruvbox
-  :silent exec "!tmux set -g status on"
-  :silent exec "!tmux resize-pane"
-endfunction
-"}}
-
-
 function! MarkdownGF()
     " Get the filename under the cursor
     let cfile=expand('<cfile>')
@@ -245,8 +220,6 @@ augroup END
 
 autocmd! Filetype markdown nnoremap <buffer> gf :call MarkdownGF()<CR>
 
-command! DlEnableDistractionFree call s:EnableDistractionFreeMode()
-command! DlDisableDistractionFree  call s:DisableDistractionFreeMode()
 command! DlGotoDailyTask call s:GotoDailyTask()
 command! DlCreateDailyTask call s:CreateDailyTask()
 command! DlCreateDailyNote call s:CreateDailyNote()
@@ -257,8 +230,6 @@ command! -nargs=1 DlCreateMeetingNotes call s:CreateMeetingNotes(<q-args>)
 command! -nargs=1 DlCreateInterviewNotes call s:CreateInterviewNotes(<q-args>)
 
 "Mappings {{
-nnoremap edf :DlEnableDistractionFree<CR>
-nnoremap ddf :DlDisableDistractionFree<CR>
 nnoremap dltn :DlGotoDailyTask<CR>
 nnoremap dlt :DlCreateDailyTask<CR>
 nnoremap dln :DlCreateDailyNote<CR>
