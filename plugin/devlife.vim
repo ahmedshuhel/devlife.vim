@@ -33,7 +33,7 @@ function! s:CreateMeetingNotes(fn)
     call s:InsterAtCursor(s:RelPath(l:fp, expand('%:p:h')))
     call s:NewFile(l:fp)
 
-    let l:cmd = "~/.dl/dlm.sh"
+    let l:cmd = "./.tmpls/dlm.sh"
     let l:result = system(cmd)
     call append(0, split(l:result, '\n'))
 endfunction
@@ -43,7 +43,7 @@ function! s:CreateInterviewNotes(fn)
     call s:InsterAtCursor(s:RelPath(l:fp, expand('%:p:h')))
     call s:NewFile(l:fp)
 
-    let l:cmd = "~/.dl/dli.sh" . " '" . a:fn . "'"
+    let l:cmd = "./.tmpls/dli.sh" . " '" . a:fn . "'"
     let l:result = system(cmd)
     call append(0, split(l:result, '\n'))
 endfunction
@@ -78,7 +78,7 @@ function! s:CreateOoo(pn)
 
     call s:NewFile(l:file_path)
 
-    let l:cmd = "~/.dl/dlo.sh " . s:RelPath(l:last_entry, l:folder_path)
+    let l:cmd = "./.tmpls/dlo.sh " . s:RelPath(l:last_entry, l:folder_path)
     let l:result = system(cmd)
     call append(0, split(l:result, '\n'))
 
@@ -136,7 +136,7 @@ function! s:CreateDailyNote()
 
     call s:NewFile(l:file_path)
 
-    let l:cmd = "~/.dl/dln.sh " . s:RelPath(l:last_entry, l:folder_path)
+    let l:cmd = "./.tmpls/dln.sh " . s:RelPath(l:last_entry, l:folder_path)
     let l:result = system(cmd)
     call append(0, split(l:result, '\n'))
     execute "normal /Tasks\<CR>"
@@ -148,7 +148,7 @@ function! s:CreatePost(fn)
     call s:InsterAtCursor(s:RelPath(l:fp, expand('%:p:h')))
     call s:NewFile(l:fp)
 
-    let l:cmd = "~/.dl/dlp.sh " . " '". a:fn ."'"
+    let l:cmd = "./.tmpls/dlp.sh " . " '". a:fn ."'"
     let l:result = system(l:cmd)
     call append(0, split(l:result, '\n'))
 endfunction
@@ -157,7 +157,7 @@ function! s:CreateTil(fn)
     let l:fp = s:project_root_dir . "/til/" . strftime("%Y-%m-%d") . "-" . join(split(a:fn), '-') . ".md"
     call s:NewFile(l:fp)
 
-    let l:cmd = "~/.dl/dlt.sh " . " '". a:fn ."'"
+    let l:cmd = "./.tmpls/dlt.sh " . " '". a:fn ."'"
     let l:result = system(l:cmd)
     call append(0, split(l:result, '\n'))
 endfunction
