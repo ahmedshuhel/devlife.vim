@@ -2,15 +2,6 @@ let s:project_root_dir = finddir('.git/..', expand('%:p:h').';')
 let s:plugin_dir = expand('<sfile>:h:h')
 let s:template_dir = s:plugin_dir . "/tmpls"
 
-command! DlEnableDistractionFree call s:EnableDistractionFreeMode()
-command! DlDisableDistractionFree  call s:DisableDistractionFreeMode()
-command! DlGotoDailyTask call s:GotoDailyTask()
-command! DlCreateDailyTask call s:CreateDailyTask()
-command! -nargs=1 DlCreatePost call s:CreatePost(<q-args>)
-command! -nargs=1 DlCreateTil call s:CreateTil(<q-args>)
-command! -nargs=1 DlCreateOoo call s:CreateOoo(<q-args>)
-command! -nargs=1 DlCreateMeetingNotes call s:CreateMeetingNotes(<q-args>)
-command! -nargs=1 DlCreateInterviewNotes call s:CreateInterviewNotes(<q-args>)
 
 function! s:RelPath(path, current_path) abort
 
@@ -117,7 +108,7 @@ function! s:CreateDailyTask()
     let l:date = strftime("%Y-%m-%d")
     let l:month = strftime('%m.%B')
     let l:year = strftime('%Y')
-    let l:last_entry = s:FindLastEntry(localtime(), 'dn/', 15)
+    let l:last_entry = s:FindLastEntry(localtime(), 'tasks/', 15)
 
     let l:folder_path = s:project_root_dir . "/tasks/" . l:year . "/" . l:month . "/"
     let l:file_path = l:folder_path . l:date . ".md"
@@ -155,11 +146,25 @@ function! s:CreatePost(fn)
     call append(0, split(l:result, '\n'))
 endfunction
 
+function! s:CreateDailyNote()
+    let l:date = strftime("%Y-%m-%d")
+    let l:month = strftime('%m.%B')
+    let l:year = strftime('%Y')
+    let l:folder_path = s:project_root_dir . "/morning_tea/" . l:year . "/" . l:month 
+    let l:file_path = l:folder_path . "/" . l:date . ".md"
+
+    call s:NewFile(l:file_path)
+
+    let l:cmd = s:template_dir . "/dln.sh"
+    let l:result = system(l:cmd)
+    call append(0, split(l:result, '\n'))
+endfunction
+
 function! s:CreateTil(fn)
     let l:fp = s:project_root_dir . "/til/" . strftime("%Y-%m-%d") . "-" . join(split(a:fn), '-') . ".md"
     call s:NewFile(l:fp)
 
-    let l:cmd = s:template_dir . "/dlt.sh " . " '". a:fn ."'"
+    let l:cmd = s:template_dir . "/dll.sh " . " '". a:fn ."'"
     let l:result = system(l:cmd)
     call append(0, split(l:result, '\n'))
 endfunction
@@ -240,11 +245,23 @@ augroup END
 
 autocmd! Filetype markdown nnoremap <buffer> gf :call MarkdownGF()<CR>
 
+command! DlEnableDistractionFree call s:EnableDistractionFreeMode()
+command! DlDisableDistractionFree  call s:DisableDistractionFreeMode()
+command! DlGotoDailyTask call s:GotoDailyTask()
+command! DlCreateDailyTask call s:CreateDailyTask()
+command! DlCreateDailyNote call s:CreateDailyNote()
+command! -nargs=1 DlCreatePost call s:CreatePost(<q-args>)
+command! -nargs=1 DlCreateTil call s:CreateTil(<q-args>)
+command! -nargs=1 DlCreateOoo call s:CreateOoo(<q-args>)
+command! -nargs=1 DlCreateMeetingNotes call s:CreateMeetingNotes(<q-args>)
+command! -nargs=1 DlCreateInterviewNotes call s:CreateInterviewNotes(<q-args>)
+
 "Mappings {{
 nnoremap edf :DlEnableDistractionFree<CR>
 nnoremap ddf :DlDisableDistractionFree<CR>
 nnoremap dltn :DlGotoDailyTask<CR>
 nnoremap dlt :DlCreateDailyTask<CR>
+nnoremap dln :DlCreateDailyNote<CR>
 nnoremap dlp :DlCreatePost
 nnoremap dll :DlCreateTil
 nnoremap dlo :DlCreateOoo
