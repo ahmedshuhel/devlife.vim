@@ -51,7 +51,7 @@ function! s:CreateOoo(pn)
     let l:date = strftime("%Y-%m-%d")
     let l:folder_path = s:project_root_dir . "/meetings/ooo/" . a:pn . "/"
     let l:file_path = l:folder_path . l:date . ".md"
-    let l:last_entry = s:FindLastEntry(localtime(), 'meetings/ooo/' . a:pn . '/', 60)
+    let l:last_entry = s:FindLastEntry(localtime(), 'meetings/ooo/' . a:pn . '/', 240)
 
     " Insert link in the current buffer. e.g. daily note
     call s:InsterAtCursor(s:RelPath(l:file_path, expand('%:p:h')))
@@ -108,7 +108,7 @@ function! s:CreateDailyTask()
     let l:date = strftime("%Y-%m-%d")
     let l:month = strftime('%m.%B')
     let l:year = strftime('%Y')
-    let l:last_entry = s:FindLastEntry(localtime(), 'tasks/', 15)
+    let l:last_entry = s:FindLastEntry(localtime(), 'tasks/', 60)
 
     let l:folder_path = s:project_root_dir . "/tasks/" . l:year . "/" . l:month . "/"
     let l:file_path = l:folder_path . l:date . ".md"
