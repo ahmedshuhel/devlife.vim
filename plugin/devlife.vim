@@ -81,14 +81,6 @@ function! s:CreateOoo(pn)
     " call append(line("."), split(l:backlog, '\n'))
 endfunction
 
-function! s:GotoDailyTask()
-    let l:date = strftime("%Y-%m-%d")
-    let l:month = strftime('%m.%B')
-    let l:year = strftime('%Y')
-    let l:fp = s:project_root_dir . "/tasks/" . l:year . "/" . l:month . "/" . l:date . ".md"
-    execute "e ". l:fp
-endfunction
-
 function! s:FindLastEntry(today, base_path, max_retry)
     if (a:max_retry <= 0)
       return s:project_root_dir . "/"  . a:base_path . strftime('%Y-%m-%s', localtime()) . '.md'
@@ -108,6 +100,14 @@ function! s:CreateDailyTask()
     let l:date = strftime("%Y-%m-%d")
     let l:month = strftime('%m.%B')
     let l:year = strftime('%Y')
+
+    let l:fp = s:project_root_dir . "/tasks/" . l:year . "/" . l:month . "/" . l:date . ".md"
+
+    if filereadable(l:fp)
+      execute "e ". l:fp
+      return 
+    endif
+
     let l:last_entry = s:FindLastEntry(localtime(), 'tasks/', 60)
 
     let l:folder_path = s:project_root_dir . "/tasks/" . l:year . "/" . l:month . "/"
@@ -151,7 +151,13 @@ function! s:CreateDailyNote()
     let l:month = strftime('%m.%B')
     let l:year = strftime('%Y')
     let l:folder_path = s:project_root_dir . "/morning_tea/" . l:year . "/" . l:month 
+
     let l:file_path = l:folder_path . "/" . l:date . ".md"
+
+    if filereadable(l:file_path)
+      execute "e ". l:file_path
+      return 
+    endif
 
     call s:NewFile(l:file_path)
 
@@ -220,7 +226,6 @@ augroup END
 
 autocmd! Filetype markdown nnoremap <buffer> gf :call MarkdownGF()<CR>
 
-command! DlGotoDailyTask call s:GotoDailyTask()
 command! DlCreateDailyTask call s:CreateDailyTask()
 command! DlCreateDailyNote call s:CreateDailyNote()
 command! -nargs=1 DlCreatePost call s:CreatePost(<q-args>)
@@ -230,7 +235,6 @@ command! -nargs=1 DlCreateMeetingNotes call s:CreateMeetingNotes(<q-args>)
 command! -nargs=1 DlCreateInterviewNotes call s:CreateInterviewNotes(<q-args>)
 
 "Mappings {{
-nnoremap dltn :DlGotoDailyTask<CR>
 nnoremap dlt :DlCreateDailyTask<CR>
 nnoremap dln :DlCreateDailyNote<CR>
 nnoremap dlp :DlCreatePost
