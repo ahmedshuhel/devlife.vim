@@ -21,12 +21,12 @@ function! s:Sanitize(fn)
   return join(split(substitute(a:fn, "-\\|(\\|)", "", "g"), "-\\|\\s\\|/\\|\\"), "-")
 endfunction
 
-function! s:CreateMeetingNotes(fn)
+function! s:CreateOneOffMeeting(fn)
     let l:fp = s:project_root_dir . "/meetings/" . strftime("%Y-%m-%d") . "-" . s:Sanitize(a:fn) . ".md"
     call s:InsterAtCursor(s:RelPath(l:fp, expand('%:p:h')))
     call s:NewFile(l:fp)
 
-    let l:cmd = s:template_dir . "/dlm.sh"
+    let l:cmd = s:template_dir . "/dlom.sh"
     let l:result = system(cmd)
     call append(0, split(l:result, '\n'))
 endfunction
@@ -47,11 +47,11 @@ function! s:InsterAtCursor(text)
     call setline('.', strpart(l:line, 0, col('.') - 1) . a:text . strpart(l:line, col('.') - 1))
 endfunction
 
-function! s:CreateOoo(pn)
+function! s:CreateMeeting(pn)
     let l:date = strftime("%Y-%m-%d")
-    let l:folder_path = s:project_root_dir . "/meetings/ooo/" . a:pn . "/"
+    let l:folder_path = s:project_root_dir . "/meetings/recurring/" . a:pn . "/"
     let l:file_path = l:folder_path . l:date . ".md"
-    let l:last_entry = s:FindLastEntry(localtime(), 'meetings/ooo/' . a:pn . '/', 240)
+    let l:last_entry = s:FindLastEntry(localtime(), 'meetings/recurring/' . a:pn . '/', 240)
 
     " Insert link in the current buffer. e.g. daily note
     call s:InsterAtCursor(s:RelPath(l:file_path, expand('%:p:h')))
@@ -71,7 +71,7 @@ function! s:CreateOoo(pn)
 
     call s:NewFile(l:file_path)
 
-    let l:cmd = s:template_dir . "/dlo.sh " . s:RelPath(l:last_entry, l:folder_path)
+    let l:cmd = s:template_dir . "/dlm.sh " . s:RelPath(l:last_entry, l:folder_path)
     let l:result = system(cmd)
     call append(0, split(l:result, '\n'))
 
@@ -230,8 +230,8 @@ command! DlCreateDailyTask call s:CreateDailyTask()
 command! DlCreateDailyNote call s:CreateDailyNote()
 command! -nargs=1 DlCreatePost call s:CreatePost(<q-args>)
 command! -nargs=1 DlCreateTil call s:CreateTil(<q-args>)
-command! -nargs=1 DlCreateOoo call s:CreateOoo(<q-args>)
-command! -nargs=1 DlCreateMeetingNotes call s:CreateMeetingNotes(<q-args>)
+command! -nargs=1 DlCreateMeeting call s:CreateMeeting(<q-args>)
+command! -nargs=1 DlCreateOneOffMeeting call s:CreateOneOffMeeting(<q-args>)
 command! -nargs=1 DlCreateInterviewNotes call s:CreateInterviewNotes(<q-args>)
 
 "Mappings {{
@@ -239,7 +239,7 @@ nnoremap dlt :DlCreateDailyTask<CR>
 nnoremap dln :DlCreateDailyNote<CR>
 nnoremap dlp :DlCreatePost
 nnoremap dll :DlCreateTil
-nnoremap dlo :DlCreateOoo
-nnoremap dlm :DlCreateMeetingNotes
+nnoremap dlm :DlCreateMeeting
+nnoremap dlom :DlCreateOneOffMeeting
 nnoremap dli :DlCreateInterviewNotes
 "}}

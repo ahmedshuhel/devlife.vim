@@ -5,15 +5,13 @@ DATE=$(date '+%Y-%m-%d')
 cat << EOF
 # $DATE
 
+- [Previous]($1)
+
 ## Agenda
 
-- TBD
+## Note
 
-## Notes
-
-TBD
-
-## Decision
+## Decision/Actions
 
 TBD
 EOF
